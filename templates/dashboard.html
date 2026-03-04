@@ -38,7 +38,6 @@
             overflow-x: hidden;
         }
 
-        /* Animated background orbs */
         body::before, body::after {
             content: '';
             position: fixed;
@@ -66,20 +65,20 @@
             33% { transform: translate(30px, -40px) scale(1.05); }
             66% { transform: translate(-20px, 20px) scale(0.95); }
         }
-
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-
         @keyframes shimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
+        }
+        @keyframes gaugeIn {
+            from { stroke-dashoffset: 251.2; }
         }
 
         .container {
@@ -91,16 +90,8 @@
         }
 
         /* Header */
-        .header {
-            margin-bottom: 40px;
-            animation: fadeInUp 0.6s ease;
-        }
-        .header-top {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 8px;
-        }
+        .header { margin-bottom: 40px; animation: fadeInUp 0.6s ease; }
+        .header-top { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
         .logo {
             width: 48px; height: 48px;
             background: linear-gradient(135deg, var(--accent), var(--blue));
@@ -111,276 +102,176 @@
             box-shadow: 0 4px 24px rgba(100,255,218,0.25);
         }
         h1 {
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 28px; font-weight: 800;
             background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; letter-spacing: -0.5px;
         }
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 15px;
-            margin-left: 64px;
-        }
+        .subtitle { color: var(--text-muted); font-size: 15px; margin-left: 64px; }
 
-        /* Actions bar */
+        /* Actions */
         .actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 32px; flex-wrap: wrap;
             animation: fadeInUp 0.6s ease 0.1s both;
         }
         .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 11px 22px;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 600;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 11px 22px; border: none; border-radius: var(--radius-sm);
+            cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600;
             text-decoration: none;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
         }
         .btn-primary {
             background: linear-gradient(135deg, var(--accent), #4fd1c5);
             color: var(--bg);
             box-shadow: 0 4px 20px rgba(100,255,218,0.3);
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(100,255,218,0.4);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(100,255,218,0.4); }
         .btn-primary:active { transform: translateY(0); }
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-        }
-        .btn-secondary:hover {
-            background: var(--surface-hover);
-            color: var(--text);
-            border-color: rgba(255,255,255,0.12);
-        }
-        #run-status {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        #run-status.loading {
-            color: var(--gold);
-            animation: pulse 1.5s ease infinite;
-        }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--surface-hover); color: var(--text); border-color: rgba(255,255,255,0.12); }
+        #run-status { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        #run-status.loading { color: var(--gold); animation: pulse 1.5s ease infinite; }
 
         /* Cards */
         .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px;
-            margin-bottom: 24px;
-            backdrop-filter: blur(20px);
-            transition: border-color 0.3s ease;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 28px; margin-bottom: 24px;
+            backdrop-filter: blur(20px); transition: border-color 0.3s ease;
         }
         .card:hover { border-color: rgba(255,255,255,0.1); }
         .card h2 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 16px; font-weight: 700; color: var(--text);
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
         }
-        .card h2 .icon {
-            font-size: 18px;
-            opacity: 0.7;
-        }
+        .card h2 .icon { font-size: 18px; opacity: 0.7; }
         .card-last-run {
             animation: fadeInUp 0.6s ease 0.15s both;
             border-image: linear-gradient(135deg, rgba(100,255,218,0.2), rgba(130,170,255,0.2)) 1;
-            border-width: 1px;
-            border-style: solid;
-            border-image-slice: 1;
-            border-radius: var(--radius);
-            overflow: hidden;
-            position: relative;
+            border-width: 1px; border-style: solid; border-image-slice: 1;
+            border-radius: var(--radius); overflow: hidden; position: relative;
         }
         .card-last-run::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
             background: linear-gradient(90deg, var(--accent), var(--blue), var(--purple));
-            background-size: 200% 100%;
-            animation: shimmer 3s linear infinite;
+            background-size: 200% 100%; animation: shimmer 3s linear infinite;
         }
-        .card-history {
-            animation: fadeInUp 0.6s ease 0.25s both;
-        }
+        .card-history { animation: fadeInUp 0.6s ease 0.25s both; }
 
         /* Stat grid */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 14px;
-        }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
         .stat {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 20px 16px;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 20px 16px; text-align: center;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
         }
-        .stat:hover {
-            background: rgba(255,255,255,0.05);
-            transform: translateY(-2px);
-        }
-        .stat .value {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            line-height: 1.1;
-        }
+        .stat:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px); }
+        .stat .value { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
         .stat .label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-muted);
-            margin-top: 8px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--text-muted); margin-top: 8px;
         }
         .stat.stat-pass .value { color: var(--green); }
         .stat.stat-pass { background: var(--green-dim); border-color: rgba(102,255,153,0.15); }
         .stat.stat-fail .value { color: var(--red); }
         .stat.stat-fail { background: var(--red-dim); border-color: rgba(255,107,138,0.15); }
         .stat.stat-latency .value { color: var(--blue); }
-        .stat.stat-avail .value { color: var(--gold); }
+        .stat.stat-avail { display: flex; flex-direction: column; align-items: center; }
+
+        /* Trend indicator */
+        .trend {
+            display: inline-flex; align-items: center; gap: 3px;
+            font-size: 11px; font-weight: 600; margin-top: 6px;
+            padding: 2px 8px; border-radius: 8px;
+        }
+        .trend-up { color: var(--red); background: var(--red-dim); }
+        .trend-down { color: var(--green); background: var(--green-dim); }
+        .trend-same { color: var(--text-muted); background: rgba(255,255,255,0.05); }
+        .trend-good-up { color: var(--green); background: var(--green-dim); }
+        .trend-bad-down { color: var(--red); background: var(--red-dim); }
+
+        /* Availability gauge */
+        .gauge-wrap { position: relative; width: 90px; height: 90px; margin: 0 auto 4px; }
+        .gauge-svg { transform: rotate(-90deg); }
+        .gauge-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8; }
+        .gauge-fill {
+            fill: none; stroke-width: 8; stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+            animation: gaugeIn 1.2s ease forwards;
+        }
+        .gauge-text {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px; font-weight: 800; color: var(--gold);
+        }
+        .gauge-text small { font-size: 10px; font-weight: 500; }
 
         /* Table */
-        .table-wrap {
-            overflow-x: auto;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
+        .table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
         thead th {
-            background: rgba(255,255,255,0.03);
-            padding: 14px 16px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
+            background: rgba(255,255,255,0.03); padding: 14px 16px; text-align: left;
+            font-weight: 600; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--text-muted);
+            border-bottom: 1px solid var(--border); white-space: nowrap;
         }
-        tbody td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
-            transition: background 0.2s ease;
-        }
+        tbody td { padding: 14px 16px; border-bottom: 1px solid var(--border); transition: background 0.2s ease; }
         tbody tr:last-child td { border-bottom: none; }
         tbody tr:hover td { background: rgba(255,255,255,0.02); }
         td.pass { color: var(--green); font-weight: 600; }
         td.fail { color: var(--red); font-weight: 600; }
         td.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
 
+        /* Progress bar (pass/fail ratio) */
+        .progress-bar {
+            width: 100%; height: 6px; border-radius: 3px;
+            background: var(--red-dim); overflow: hidden; min-width: 60px;
+        }
+        .progress-fill {
+            height: 100%; border-radius: 3px;
+            background: linear-gradient(90deg, var(--green), var(--accent));
+            transition: width 0.4s ease;
+        }
+        .progress-cell { display: flex; flex-direction: column; gap: 4px; }
+        .progress-label { font-size: 10px; color: var(--text-muted); }
+
+        /* Sparkline */
+        .sparkline-cell { min-width: 80px; }
+        .sparkline-cell canvas { display: block; }
+
         /* Badges */
         .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .badge-pass {
-            background: var(--green-dim);
-            color: var(--green);
-            border: 1px solid rgba(102,255,153,0.2);
-        }
-        .badge-fail {
-            background: var(--red-dim);
-            color: var(--red);
-            border: 1px solid rgba(255,107,138,0.2);
-        }
-        .badge-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: currentColor;
-        }
+        .badge-pass { background: var(--green-dim); color: var(--green); border: 1px solid rgba(102,255,153,0.2); }
+        .badge-fail { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,107,138,0.2); }
+        .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
         /* Links */
-        a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
+        a { color: var(--accent); text-decoration: none; font-weight: 500; transition: color 0.2s ease; }
         a:hover { color: #fff; }
-        .details-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            opacity: 0.6;
-            transition: opacity 0.2s ease;
-        }
+        .details-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; opacity: 0.6; transition: opacity 0.2s ease; }
         tbody tr:hover .details-link { opacity: 1; }
 
-        /* Empty state */
-        .empty {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.3;
-        }
+        /* Empty */
+        .empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
         .empty p { font-size: 15px; }
 
         /* Charts */
         .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-            animation: fadeInUp 0.6s ease 0.2s both;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+            margin-bottom: 24px; animation: fadeInUp 0.6s ease 0.2s both;
         }
         .card-chart { padding: 24px; }
         .card-chart canvas { max-height: 260px; }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .charts-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
         @media (max-width: 640px) {
             .container { padding: 20px 16px; }
             h1 { font-size: 22px; }
@@ -419,27 +310,82 @@
 
     {% if runs %}
     {% set last = runs[0] %}
+    {% if runs|length > 1 %}
+        {% set prev = runs[1] %}
+    {% else %}
+        {% set prev = None %}
+    {% endif %}
     <div class="card card-last-run">
         <h2><span class="icon">&#9889;</span> Dernier run &mdash; {{ last.timestamp | datefmt }}</h2>
         <div class="stats">
             <div class="stat stat-pass">
                 <div class="value">{{ last.passed }}</div>
                 <div class="label">Passed</div>
+                {% if prev %}
+                    {% set diff = last.passed - prev.passed %}
+                    {% if diff > 0 %}
+                    <div class="trend trend-good-up">&#9650; +{{ diff }}</div>
+                    {% elif diff < 0 %}
+                    <div class="trend trend-bad-down">&#9660; {{ diff }}</div>
+                    {% else %}
+                    <div class="trend trend-same">&#9644; =</div>
+                    {% endif %}
+                {% endif %}
             </div>
             <div class="stat stat-fail">
                 <div class="value">{{ last.failed }}</div>
                 <div class="label">Failed</div>
+                {% if prev %}
+                    {% set diff = last.failed - prev.failed %}
+                    {% if diff > 0 %}
+                    <div class="trend trend-up">&#9650; +{{ diff }}</div>
+                    {% elif diff < 0 %}
+                    <div class="trend trend-down">&#9660; {{ diff }}</div>
+                    {% else %}
+                    <div class="trend trend-same">&#9644; =</div>
+                    {% endif %}
+                {% endif %}
             </div>
             <div class="stat stat-latency">
                 <div class="value">{{ last.latency_avg }}<small style="font-size:14px;font-weight:500">ms</small></div>
                 <div class="label">Latence avg</div>
+                {% if prev %}
+                    {% set diff = last.latency_avg - prev.latency_avg %}
+                    {% if diff > 5 %}
+                    <div class="trend trend-up">&#9650; +{{ diff|round(0)|int }}ms</div>
+                    {% elif diff < -5 %}
+                    <div class="trend trend-down">&#9660; {{ diff|round(0)|int }}ms</div>
+                    {% else %}
+                    <div class="trend trend-same">&#9644; stable</div>
+                    {% endif %}
+                {% endif %}
             </div>
             <div class="stat stat-latency">
                 <div class="value">{{ last.latency_p95 }}<small style="font-size:14px;font-weight:500">ms</small></div>
                 <div class="label">Latence p95</div>
+                {% if prev %}
+                    {% set diff = last.latency_p95 - prev.latency_p95 %}
+                    {% if diff > 10 %}
+                    <div class="trend trend-up">&#9650; +{{ diff|round(0)|int }}ms</div>
+                    {% elif diff < -10 %}
+                    <div class="trend trend-down">&#9660; {{ diff|round(0)|int }}ms</div>
+                    {% else %}
+                    <div class="trend trend-same">&#9644; stable</div>
+                    {% endif %}
+                {% endif %}
             </div>
             <div class="stat stat-avail">
-                <div class="value">{{ (last.availability * 100) | round(1) }}<small style="font-size:14px;font-weight:500">%</small></div>
+                {% set pct = (last.availability * 100)|round(1) %}
+                <div class="gauge-wrap">
+                    <svg class="gauge-svg" width="90" height="90" viewBox="0 0 90 90">
+                        <circle class="gauge-bg" cx="45" cy="45" r="40"/>
+                        <circle class="gauge-fill" cx="45" cy="45" r="40"
+                            stroke="{% if pct >= 90 %}var(--gold){% elif pct >= 50 %}#ff9f43{% else %}var(--red){% endif %}"
+                            stroke-dasharray="251.2"
+                            stroke-dashoffset="{{ 251.2 - (251.2 * pct / 100) }}"/>
+                    </svg>
+                    <div class="gauge-text">{{ pct }}<small>%</small></div>
+                </div>
                 <div class="label">Disponibilite</div>
             </div>
         </div>
@@ -468,11 +414,11 @@
                 <tr>
                     <th>#</th>
                     <th>Date</th>
-                    <th>Passed</th>
-                    <th>Failed</th>
+                    <th>Ratio</th>
                     <th>Err. Rate</th>
                     <th>Avg</th>
                     <th>p95</th>
+                    <th>Trend</th>
                     <th>Status</th>
                     <th></th>
                 </tr>
@@ -482,11 +428,18 @@
                 <tr>
                     <td class="mono" style="color:var(--text-muted)">{{ run.id }}</td>
                     <td>{{ run.timestamp | datefmt }}</td>
-                    <td class="pass">{{ run.passed }}</td>
-                    <td class="fail">{{ run.failed }}</td>
+                    <td>
+                        <div class="progress-cell">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width:{{ (run.passed / (run.passed + run.failed) * 100) if (run.passed + run.failed) > 0 else 0 }}%"></div>
+                            </div>
+                            <div class="progress-label">{{ run.passed }} pass / {{ run.failed }} fail</div>
+                        </div>
+                    </td>
                     <td class="mono">{{ (run.error_rate * 100) | round(1) }}%</td>
                     <td class="mono">{{ run.latency_avg }}ms</td>
                     <td class="mono">{{ run.latency_p95 }}ms</td>
+                    <td class="sparkline-cell"><canvas id="spark-{{ run.id }}" width="80" height="28"></canvas></td>
                     <td>
                         {% if run.failed == 0 %}
                         <span class="badge badge-pass"><span class="badge-dot"></span>OK</span>
@@ -510,10 +463,15 @@
 </div>
 
 <script>
+{% if runs %}
+const allRuns = {{ runs | tojson }};
+{% else %}
+const allRuns = [];
+{% endif %}
+
 {% if runs and runs|length > 1 %}
 (function() {
-    const runs = {{ runs | tojson }};
-    const reversed = [...runs].reverse();
+    const reversed = [...allRuns].reverse();
     const labels = reversed.map(r => {
         const d = new Date(r.timestamp);
         return d.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit'})
@@ -534,63 +492,42 @@
         }
     };
 
-    // Latency chart
     new Chart(document.getElementById('chartLatency'), {
         type: 'line',
         data: {
             labels,
             datasets: [
                 {
-                    label: 'Avg (ms)',
-                    data: reversed.map(r => r.latency_avg),
-                    borderColor: '#82aaff',
-                    backgroundColor: 'rgba(130,170,255,0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: '#82aaff',
-                    borderWidth: 2,
+                    label: 'Avg (ms)', data: reversed.map(r => r.latency_avg),
+                    borderColor: '#82aaff', backgroundColor: 'rgba(130,170,255,0.1)',
+                    fill: true, tension: 0.4, pointRadius: 4, pointHoverRadius: 6,
+                    pointBackgroundColor: '#82aaff', borderWidth: 2,
                 },
                 {
-                    label: 'p95 (ms)',
-                    data: reversed.map(r => r.latency_p95),
-                    borderColor: '#c792ea',
-                    backgroundColor: 'rgba(199,146,234,0.08)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: '#c792ea',
-                    borderWidth: 2,
-                    borderDash: [5, 3],
+                    label: 'p95 (ms)', data: reversed.map(r => r.latency_p95),
+                    borderColor: '#c792ea', backgroundColor: 'rgba(199,146,234,0.08)',
+                    fill: true, tension: 0.4, pointRadius: 4, pointHoverRadius: 6,
+                    pointBackgroundColor: '#c792ea', borderWidth: 2, borderDash: [5, 3],
                 }
             ]
         },
         options: { ...shared, scales: { ...shared.scales, y: { ...shared.scales.y, beginAtZero: true, title: { display: true, text: 'ms', color: '#8892b0', font: { size: 10 } } } } }
     });
 
-    // Pass/Fail chart
     new Chart(document.getElementById('chartPassFail'), {
         type: 'bar',
         data: {
             labels,
             datasets: [
                 {
-                    label: 'Passed',
-                    data: reversed.map(r => r.passed),
-                    backgroundColor: 'rgba(102,255,153,0.6)',
-                    borderColor: '#66ff99',
-                    borderWidth: 1,
-                    borderRadius: 4,
+                    label: 'Passed', data: reversed.map(r => r.passed),
+                    backgroundColor: 'rgba(102,255,153,0.6)', borderColor: '#66ff99',
+                    borderWidth: 1, borderRadius: 4,
                 },
                 {
-                    label: 'Failed',
-                    data: reversed.map(r => r.failed),
-                    backgroundColor: 'rgba(255,107,138,0.6)',
-                    borderColor: '#ff6b8a',
-                    borderWidth: 1,
-                    borderRadius: 4,
+                    label: 'Failed', data: reversed.map(r => r.failed),
+                    backgroundColor: 'rgba(255,107,138,0.6)', borderColor: '#ff6b8a',
+                    borderWidth: 1, borderRadius: 4,
                 }
             ]
         },
@@ -598,6 +535,67 @@
     });
 })();
 {% endif %}
+
+// Sparklines: for each row, draw a mini latency line from nearby runs
+(function() {
+    if (!allRuns.length) return;
+    const reversed = [...allRuns].reverse();
+
+    allRuns.forEach((run, idx) => {
+        const canvas = document.getElementById('spark-' + run.id);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+
+        // Get window of up to 5 runs centered around this run's position (in reversed order)
+        const revIdx = reversed.findIndex(r => r.id === run.id);
+        const start = Math.max(0, revIdx - 2);
+        const end = Math.min(reversed.length, revIdx + 3);
+        const window = reversed.slice(start, end);
+        if (window.length < 2) return;
+
+        const values = window.map(r => r.latency_avg);
+        const min = Math.min(...values) * 0.8;
+        const max = Math.max(...values) * 1.1 || 1;
+        const range = max - min || 1;
+
+        // Gradient fill
+        const gradient = ctx.createLinearGradient(0, 0, 0, h);
+        gradient.addColorStop(0, 'rgba(130,170,255,0.3)');
+        gradient.addColorStop(1, 'rgba(130,170,255,0)');
+
+        ctx.clearRect(0, 0, w, h);
+
+        // Fill
+        ctx.beginPath();
+        values.forEach((v, i) => {
+            const x = (i / (values.length - 1)) * w;
+            const y = h - ((v - min) / range) * (h - 4) - 2;
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
+        ctx.fillStyle = gradient; ctx.fill();
+
+        // Line
+        ctx.beginPath();
+        values.forEach((v, i) => {
+            const x = (i / (values.length - 1)) * w;
+            const y = h - ((v - min) / range) * (h - 4) - 2;
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = '#82aaff'; ctx.lineWidth = 1.5; ctx.stroke();
+
+        // Current point
+        const curLocalIdx = revIdx - start;
+        if (curLocalIdx >= 0 && curLocalIdx < values.length) {
+            const cx = (curLocalIdx / (values.length - 1)) * w;
+            const cy = h - ((values[curLocalIdx] - min) / range) * (h - 4) - 2;
+            ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+            ctx.fillStyle = '#82aaff'; ctx.fill();
+            ctx.strokeStyle = '#0f111a'; ctx.lineWidth = 1; ctx.stroke();
+        }
+    });
+})();
 
 function triggerRun() {
     const btn = document.getElementById('run-btn');
@@ -613,7 +611,7 @@ function triggerRun() {
         .then(data => {
             status.className = '';
             status.style.color = 'var(--green)';
-            status.textContent = `Run #${data.summary.total}: ${data.summary.passed} passed, ${data.summary.failed} failed`;
+            status.textContent = `Run termine: ${data.summary.passed} passed, ${data.summary.failed} failed`;
             setTimeout(() => location.reload(), 1200);
         })
         .catch(err => {
