@@ -1,13 +1,32 @@
 # API Choice
 
-- Étudiant :
-- API choisie :
-- URL base :
-- Documentation officielle / README :
-- Auth : None / API Key / OAuth
+- Étudiant : J1
+- API choisie : AlQuran Cloud
+- URL base : https://api.alquran.cloud/v1
+- Documentation officielle / README : https://alquran.cloud/api
+- Auth : None
 - Endpoints testés :
-  - GET ...
-  - GET ...
+  - GET /v1/surah/1 — Récupérer la sourate Al-Fatiha
+  - GET /v1/ayah/262 — Récupérer un verset par référence
+  - GET /v1/meta — Métadonnées du Quran (nombre de sourates, versets, etc.)
+  - GET /v1/edition — Liste de toutes les éditions disponibles
+  - GET /v1/edition/language/fr — Éditions filtrées par langue
+  - GET /v1/search/Rahman/all/fr.hamidullah — Recherche plein texte
+  - GET /v1/juz/30/fr.hamidullah — Récupérer un juz
+  - GET /v1/surah/999 — Cas invalide (sourate inexistante)
 - Hypothèses de contrat (champs attendus, types, codes) :
+  - Toutes les réponses suivent le format `{"code": int, "status": str, "data": object}`
+  - `code` est un entier HTTP (200, 400, 404, etc.)
+  - `status` est une chaîne ("OK", "Not Found", "Bad Request")
+  - `/v1/surah/{n}` : `data` contient `number` (int), `name` (str), `englishName` (str), `ayahs` (list)
+  - `/v1/ayah/{ref}` : `data` contient `number` (int), `text` (str), `surah` (object), `edition` (object)
+  - `/v1/meta` : `data` contient `ayahs.count` (int), `surahs.count` (int)
+  - `/v1/edition` : `data` est une liste d'objets avec `identifier`, `language`, `name`, `englishName`
+  - Entrée invalide → `code` 404 ou 400, `status` != "OK"
 - Limites / rate limiting connu :
+  - Pas de rate limit documenté officiellement
+  - Respecter un usage raisonnable (~20 requêtes/run max)
 - Risques (instabilité, downtime, CORS, etc.) :
+  - API communautaire, pas de SLA garanti
+  - Possibilité de latence variable selon la charge
+  - CORS activé (pas de souci côté serveur)
