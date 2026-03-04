@@ -54,7 +54,7 @@
     {% if runs %}
     {% set last = runs[0] %}
     <div class="card">
-        <h2>Dernier run — {{ last.timestamp[:19] }}</h2>
+        <h2>Dernier run — {{ last.timestamp | datefmt }}</h2>
         <div class="stats">
             <div class="stat">
                 <div class="value pass">{{ last.passed }}</div>
@@ -101,7 +101,7 @@
                 {% for run in runs %}
                 <tr>
                     <td>{{ run.id }}</td>
-                    <td>{{ run.timestamp[:19] }}</td>
+                    <td>{{ run.timestamp | datefmt }}</td>
                     <td class="pass">{{ run.passed }}</td>
                     <td class="fail">{{ run.failed }}</td>
                     <td>{{ (run.error_rate * 100) | round(1) }}%</td>

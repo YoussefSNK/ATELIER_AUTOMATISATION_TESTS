@@ -6,6 +6,17 @@ from storage import save_run, list_runs, get_run
 
 app = Flask(__name__)
 
+
+@app.template_filter("datefmt")
+def datefmt(value):
+    """Format ISO timestamp to readable French-style date."""
+    from datetime import datetime
+    try:
+        dt = datetime.fromisoformat(value)
+        return dt.strftime("%d/%m/%Y %H:%M:%S")
+    except Exception:
+        return value
+
 # Anti-spam: minimum seconds between runs
 import time
 _last_run_ts = 0

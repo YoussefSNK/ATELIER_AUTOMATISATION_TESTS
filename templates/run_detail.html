@@ -28,7 +28,7 @@
 <div class="container">
     <div class="back"><a href="/dashboard">&larr; Retour au dashboard</a></div>
     <h1>Run #{{ run.id }}</h1>
-    <p style="color:#666; margin-bottom:20px;">{{ run.timestamp }}</p>
+    <p style="color:#666; margin-bottom:20px;">{{ run.timestamp | datefmt }}</p>
 
     <div class="card">
         <div class="stats">
