@@ -3,96 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlQuran Cloud API - Dashboard</title>
+    <title>AlQuran Cloud - Test Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #0f111a;
+            --surface: #1a1d2e;
+            --surface-hover: #232740;
+            --border: rgba(255,255,255,0.06);
+            --text: #e2e8f0;
+            --text-muted: #8892b0;
+            --accent: #64ffda;
+            --accent-dim: rgba(100,255,218,0.1);
+            --green: #66ff99;
+            --green-dim: rgba(102,255,153,0.12);
+            --red: #ff6b8a;
+            --red-dim: rgba(255,107,138,0.12);
+            --blue: #82aaff;
+            --purple: #c792ea;
+            --gold: #ffcb6b;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
-        .container { max-width: 960px; margin: 0 auto; padding: 20px; }
-        h1 { margin-bottom: 8px; color: #1a5276; }
-        .subtitle { color: #666; margin-bottom: 24px; }
-        .actions { margin-bottom: 24px; display: flex; gap: 12px; align-items: center; }
-        .btn { display: inline-block; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; text-decoration: none; }
-        .btn-primary { background: #2e86c1; color: #fff; }
-        .btn-primary:hover { background: #1a5276; }
-        .btn-secondary { background: #e8e8e8; color: #333; }
-        .btn-secondary:hover { background: #d0d0d0; }
-        #run-status { font-size: 14px; color: #666; }
-        .card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .card h2 { margin-bottom: 12px; font-size: 18px; color: #1a5276; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .stat { background: #f0f6fb; border-radius: 6px; padding: 14px; text-align: center; }
-        .stat .value { font-size: 28px; font-weight: 700; color: #2e86c1; }
-        .stat .label { font-size: 12px; color: #666; margin-top: 4px; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th { background: #f0f6fb; padding: 10px; text-align: left; font-weight: 600; }
-        td { padding: 10px; border-bottom: 1px solid #eee; }
-        tr:hover { background: #fafafa; }
-        .pass { color: #27ae60; font-weight: 600; }
-        .fail { color: #e74c3c; font-weight: 600; }
-        .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; }
-        .badge-pass { background: #d4efdf; color: #1e8449; }
-        .badge-fail { background: #fadbd8; color: #c0392b; }
-        .badge-healthy { background: #d4efdf; color: #1e8449; }
-        .badge-degraded { background: #fdebd0; color: #e67e22; }
-        a { color: #2e86c1; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .empty { text-align: center; padding: 40px; color: #999; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background orbs */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+        body::before {
+            width: 600px; height: 600px;
+            background: var(--accent);
+            top: -200px; right: -100px;
+            animation: float 20s ease-in-out infinite;
+        }
+        body::after {
+            width: 500px; height: 500px;
+            background: var(--purple);
+            bottom: -150px; left: -100px;
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -40px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+        .logo {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; font-weight: 800; color: var(--bg);
+            flex-shrink: 0;
+            box-shadow: 0 4px 24px rgba(100,255,218,0.25);
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-left: 64px;
+        }
+
+        /* Actions bar */
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #4fd1c5);
+            color: var(--bg);
+            box-shadow: 0 4px 20px rgba(100,255,218,0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(100,255,218,0.4);
+        }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+            border-color: rgba(255,255,255,0.12);
+        }
+        #run-status {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        #run-status.loading {
+            color: var(--gold);
+            animation: pulse 1.5s ease infinite;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(20px);
+            transition: border-color 0.3s ease;
+        }
+        .card:hover { border-color: rgba(255,255,255,0.1); }
+        .card h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card h2 .icon {
+            font-size: 18px;
+            opacity: 0.7;
+        }
+        .card-last-run {
+            animation: fadeInUp 0.6s ease 0.15s both;
+            border-image: linear-gradient(135deg, rgba(100,255,218,0.2), rgba(130,170,255,0.2)) 1;
+            border-width: 1px;
+            border-style: solid;
+            border-image-slice: 1;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+        }
+        .card-last-run::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--blue), var(--purple));
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+        .card-history {
+            animation: fadeInUp 0.6s ease 0.25s both;
+        }
+
+        /* Stat grid */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+        }
+        .stat {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat:hover {
+            background: rgba(255,255,255,0.05);
+            transform: translateY(-2px);
+        }
+        .stat .value {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+        .stat .label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        .stat.stat-pass .value { color: var(--green); }
+        .stat.stat-pass { background: var(--green-dim); border-color: rgba(102,255,153,0.15); }
+        .stat.stat-fail .value { color: var(--red); }
+        .stat.stat-fail { background: var(--red-dim); border-color: rgba(255,107,138,0.15); }
+        .stat.stat-latency .value { color: var(--blue); }
+        .stat.stat-avail .value { color: var(--gold); }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        thead th {
+            background: rgba(255,255,255,0.03);
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        tbody td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
+        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover td { background: rgba(255,255,255,0.02); }
+        td.pass { color: var(--green); font-weight: 600; }
+        td.fail { color: var(--red); font-weight: 600; }
+        td.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-pass {
+            background: var(--green-dim);
+            color: var(--green);
+            border: 1px solid rgba(102,255,153,0.2);
+        }
+        .badge-fail {
+            background: var(--red-dim);
+            color: var(--red);
+            border: 1px solid rgba(255,107,138,0.2);
+        }
+        .badge-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Links */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        a:hover { color: #fff; }
+        .details-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+        }
+        tbody tr:hover .details-link { opacity: 1; }
+
+        /* Empty state */
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+        .empty p { font-size: 15px; }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container { padding: 20px 16px; }
+            h1 { font-size: 22px; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .stat .value { font-size: 24px; }
+            .actions { gap: 8px; }
+            .btn { padding: 9px 16px; font-size: 13px; }
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>AlQuran Cloud API - Test Dashboard</h1>
-    <p class="subtitle">Automated API testing &amp; QoS monitoring</p>
+    <div class="header">
+        <div class="header-top">
+            <div class="logo">Q</div>
+            <h1>AlQuran Cloud API</h1>
+        </div>
+        <p class="subtitle">Automated API testing &amp; QoS monitoring</p>
+    </div>
 
     <div class="actions">
-        <button class="btn btn-primary" id="run-btn" onclick="triggerRun()">Lancer un run</button>
-        <a href="/api/runs" class="btn btn-secondary" download>Export JSON</a>
-        <a href="/health" class="btn btn-secondary">Health</a>
+        <button class="btn btn-primary" id="run-btn" onclick="triggerRun()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2l10 6-10 6V2z" fill="currentColor"/></svg>
+            Lancer un run
+        </button>
+        <a href="/api/runs" class="btn btn-secondary" download>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v10M4 8l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Export JSON
+        </a>
+        <a href="/health" class="btn btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 8h3l2-5 3 10 2-5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Health
+        </a>
         <span id="run-status"></span>
     </div>
 
     {% if runs %}
     {% set last = runs[0] %}
-    <div class="card">
-        <h2>Dernier run — {{ last.timestamp | datefmt }}</h2>
+    <div class="card card-last-run">
+        <h2><span class="icon">&#9889;</span> Dernier run &mdash; {{ last.timestamp | datefmt }}</h2>
         <div class="stats">
-            <div class="stat">
-                <div class="value pass">{{ last.passed }}</div>
+            <div class="stat stat-pass">
+                <div class="value">{{ last.passed }}</div>
                 <div class="label">Passed</div>
             </div>
-            <div class="stat">
-                <div class="value fail">{{ last.failed }}</div>
+            <div class="stat stat-fail">
+                <div class="value">{{ last.failed }}</div>
                 <div class="label">Failed</div>
             </div>
-            <div class="stat">
-                <div class="value">{{ last.latency_avg }}ms</div>
+            <div class="stat stat-latency">
+                <div class="value">{{ last.latency_avg }}<small style="font-size:14px;font-weight:500">ms</small></div>
                 <div class="label">Latence avg</div>
             </div>
-            <div class="stat">
-                <div class="value">{{ last.latency_p95 }}ms</div>
+            <div class="stat stat-latency">
+                <div class="value">{{ last.latency_p95 }}<small style="font-size:14px;font-weight:500">ms</small></div>
                 <div class="label">Latence p95</div>
             </div>
-            <div class="stat">
-                <div class="value">{{ (last.availability * 100) | round(1) }}%</div>
+            <div class="stat stat-avail">
+                <div class="value">{{ (last.availability * 100) | round(1) }}<small style="font-size:14px;font-weight:500">%</small></div>
                 <div class="label">Disponibilite</div>
             </div>
         </div>
     </div>
     {% endif %}
 
-    <div class="card">
-        <h2>Historique des runs</h2>
+    <div class="card card-history">
+        <h2><span class="icon">&#128202;</span> Historique des runs</h2>
         {% if runs %}
+        <div class="table-wrap">
         <table>
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Timestamp</th>
+                    <th>Date</th>
                     <th>Passed</th>
                     <th>Failed</th>
                     <th>Err. Rate</th>
-                    <th>Avg (ms)</th>
-                    <th>p95 (ms)</th>
+                    <th>Avg</th>
+                    <th>p95</th>
                     <th>Status</th>
                     <th></th>
                 </tr>
@@ -100,28 +452,30 @@
             <tbody>
                 {% for run in runs %}
                 <tr>
-                    <td>{{ run.id }}</td>
+                    <td class="mono" style="color:var(--text-muted)">{{ run.id }}</td>
                     <td>{{ run.timestamp | datefmt }}</td>
                     <td class="pass">{{ run.passed }}</td>
                     <td class="fail">{{ run.failed }}</td>
-                    <td>{{ (run.error_rate * 100) | round(1) }}%</td>
-                    <td>{{ run.latency_avg }}</td>
-                    <td>{{ run.latency_p95 }}</td>
+                    <td class="mono">{{ (run.error_rate * 100) | round(1) }}%</td>
+                    <td class="mono">{{ run.latency_avg }}ms</td>
+                    <td class="mono">{{ run.latency_p95 }}ms</td>
                     <td>
                         {% if run.failed == 0 %}
-                        <span class="badge badge-pass">OK</span>
+                        <span class="badge badge-pass"><span class="badge-dot"></span>OK</span>
                         {% else %}
-                        <span class="badge badge-fail">FAIL</span>
+                        <span class="badge badge-fail"><span class="badge-dot"></span>FAIL</span>
                         {% endif %}
                     </td>
-                    <td><a href="/run/{{ run.id }}">Details</a></td>
+                    <td><a href="/run/{{ run.id }}" class="details-link">Details &rarr;</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        </div>
         {% else %}
         <div class="empty">
-            Aucun run pour l'instant. Cliquez sur "Lancer un run" pour commencer.
+            <div class="empty-icon">&#128640;</div>
+            <p>Aucun run pour l'instant.<br>Cliquez sur <strong>Lancer un run</strong> pour commencer.</p>
         </div>
         {% endif %}
     </div>
@@ -132,6 +486,7 @@ function triggerRun() {
     const btn = document.getElementById('run-btn');
     const status = document.getElementById('run-status');
     btn.disabled = true;
+    status.className = 'loading';
     status.textContent = 'Execution en cours...';
     fetch('/run', { method: 'POST' })
         .then(r => {
@@ -139,10 +494,14 @@ function triggerRun() {
             return r.json();
         })
         .then(data => {
-            status.textContent = `Run termine: ${data.summary.passed} passed, ${data.summary.failed} failed`;
-            setTimeout(() => location.reload(), 1500);
+            status.className = '';
+            status.style.color = 'var(--green)';
+            status.textContent = `Run #${data.summary.total}: ${data.summary.passed} passed, ${data.summary.failed} failed`;
+            setTimeout(() => location.reload(), 1200);
         })
         .catch(err => {
+            status.className = '';
+            status.style.color = 'var(--red)';
             status.textContent = err.message;
             btn.disabled = false;
         });
