@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlQuran Cloud API - Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+        .container { max-width: 960px; margin: 0 auto; padding: 20px; }
+        h1 { margin-bottom: 8px; color: #1a5276; }
+        .subtitle { color: #666; margin-bottom: 24px; }
+        .actions { margin-bottom: 24px; display: flex; gap: 12px; align-items: center; }
+        .btn { display: inline-block; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; text-decoration: none; }
+        .btn-primary { background: #2e86c1; color: #fff; }
+        .btn-primary:hover { background: #1a5276; }
+        .btn-secondary { background: #e8e8e8; color: #333; }
+        .btn-secondary:hover { background: #d0d0d0; }
+        #run-status { font-size: 14px; color: #666; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card h2 { margin-bottom: 12px; font-size: 18px; color: #1a5276; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .stat { background: #f0f6fb; border-radius: 6px; padding: 14px; text-align: center; }
+        .stat .value { font-size: 28px; font-weight: 700; color: #2e86c1; }
+        .stat .label { font-size: 12px; color: #666; margin-top: 4px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background: #f0f6fb; padding: 10px; text-align: left; font-weight: 600; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #fafafa; }
+        .pass { color: #27ae60; font-weight: 600; }
+        .fail { color: #e74c3c; font-weight: 600; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+        .badge-pass { background: #d4efdf; color: #1e8449; }
+        .badge-fail { background: #fadbd8; color: #c0392b; }
+        .badge-healthy { background: #d4efdf; color: #1e8449; }
+        .badge-degraded { background: #fdebd0; color: #e67e22; }
+        a { color: #2e86c1; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .empty { text-align: center; padding: 40px; color: #999; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>AlQuran Cloud API - Test Dashboard</h1>
+    <p class="subtitle">Automated API testing &amp; QoS monitoring</p>
+
+    <div class="actions">
+        <button class="btn btn-primary" id="run-btn" onclick="triggerRun()">Lancer un run</button>
+        <a href="/api/runs" class="btn btn-secondary" download>Export JSON</a>
+        <a href="/health" class="btn btn-secondary">Health</a>
+        <span id="run-status"></span>
+    </div>
+
+    {% if runs %}
+    {% set last = runs[0] %}
+    <div class="card">
+        <h2>Dernier run — {{ last.timestamp[:19] }}</h2>
+        <div class="stats">
+            <div class="stat">
+                <div class="value pass">{{ last.passed }}</div>
+                <div class="label">Passed</div>
+            </div>
+            <div class="stat">
+                <div class="value fail">{{ last.failed }}</div>
+                <div class="label">Failed</div>
+            </div>
+            <div class="stat">
+                <div class="value">{{ last.latency_avg }}ms</div>
+                <div class="label">Latence avg</div>
+            </div>
+            <div class="stat">
+                <div class="value">{{ last.latency_p95 }}ms</div>
+                <div class="label">Latence p95</div>
+            </div>
+            <div class="stat">
+                <div class="value">{{ (last.availability * 100) | round(1) }}%</div>
+                <div class="label">Disponibilite</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <h2>Historique des runs</h2>
+        {% if runs %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Timestamp</th>
+                    <th>Passed</th>
+                    <th>Failed</th>
+                    <th>Err. Rate</th>
+                    <th>Avg (ms)</th>
+                    <th>p95 (ms)</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for run in runs %}
+                <tr>
+                    <td>{{ run.id }}</td>
+                    <td>{{ run.timestamp[:19] }}</td>
+                    <td class="pass">{{ run.passed }}</td>
+                    <td class="fail">{{ run.failed }}</td>
+                    <td>{{ (run.error_rate * 100) | round(1) }}%</td>
+                    <td>{{ run.latency_avg }}</td>
+                    <td>{{ run.latency_p95 }}</td>
+                    <td>
+                        {% if run.failed == 0 %}
+                        <span class="badge badge-pass">OK</span>
+                        {% else %}
+                        <span class="badge badge-fail">FAIL</span>
+                        {% endif %}
+                    </td>
+                    <td><a href="/run/{{ run.id }}">Details</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">
+            Aucun run pour l'instant. Cliquez sur "Lancer un run" pour commencer.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function triggerRun() {
+    const btn = document.getElementById('run-btn');
+    const status = document.getElementById('run-status');
+    btn.disabled = true;
+    status.textContent = 'Execution en cours...';
+    fetch('/run', { method: 'POST' })
+        .then(r => {
+            if (r.status === 429) return r.json().then(d => { throw new Error(d.error); });
+            return r.json();
+        })
+        .then(data => {
+            status.textContent = `Run termine: ${data.summary.passed} passed, ${data.summary.failed} failed`;
+            setTimeout(() => location.reload(), 1500);
+        })
+        .catch(err => {
+            status.textContent = err.message;
+            btn.disabled = false;
+        });
+}
+</script>
+</body>
+</html>

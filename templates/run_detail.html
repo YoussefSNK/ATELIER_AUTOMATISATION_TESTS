@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run #{{ run.id }} - Detail</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+        .container { max-width: 960px; margin: 0 auto; padding: 20px; }
+        h1 { margin-bottom: 8px; color: #1a5276; }
+        .back { margin-bottom: 20px; }
+        a { color: #2e86c1; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .stat { background: #f0f6fb; border-radius: 6px; padding: 14px; text-align: center; }
+        .stat .value { font-size: 24px; font-weight: 700; color: #2e86c1; }
+        .stat .label { font-size: 12px; color: #666; margin-top: 4px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background: #f0f6fb; padding: 10px; text-align: left; font-weight: 600; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
+        .pass { color: #27ae60; font-weight: 600; }
+        .fail { color: #e74c3c; font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="back"><a href="/dashboard">&larr; Retour au dashboard</a></div>
+    <h1>Run #{{ run.id }}</h1>
+    <p style="color:#666; margin-bottom:20px;">{{ run.timestamp }}</p>
+
+    <div class="card">
+        <div class="stats">
+            <div class="stat"><div class="value pass">{{ run.passed }}</div><div class="label">Passed</div></div>
+            <div class="stat"><div class="value fail">{{ run.failed }}</div><div class="label">Failed</div></div>
+            <div class="stat"><div class="value">{{ run.latency_avg }}ms</div><div class="label">Avg latency</div></div>
+            <div class="stat"><div class="value">{{ run.latency_p95 }}ms</div><div class="label">p95 latency</div></div>
+            <div class="stat"><div class="value">{{ (run.availability * 100) | round(1) }}%</div><div class="label">Disponibilite</div></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-bottom:12px; color:#1a5276;">Tests</h2>
+        <table>
+            <thead>
+                <tr><th>Test</th><th>Status</th><th>Latence (ms)</th><th>Details</th></tr>
+            </thead>
+            <tbody>
+                {% for t in run.tests %}
+                <tr>
+                    <td>{{ t.name }}</td>
+                    <td class="{{ t.status | lower }}">{{ t.status }}</td>
+                    <td>{{ t.latency_ms }}</td>
+                    <td>{{ t.details or '' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
