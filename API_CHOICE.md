@@ -1,6 +1,6 @@
 # API Choice
 
-- Étudiant : FADILI Youssef
+- Étudiant :
 - API choisie :
 - URL base :
 - Documentation officielle / README :
